@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app: 
+    image: cosmtrek/air:v1.40.4
+    restart: always
+    container_name: monitoring-app
+    working_dir: /app
+    ports:
+      - 3000:3000
+    environment:
+      - GOPROXY=https://goproxy.io,direct 
+    volumes:
+      - .:/app 
+    depends_on:
+      - pg
+
+  pg:
+    image: postgres:14.5-alpine
+    restart: always
+    container_name: pg-db
+    volumes:
+      - ./pgdata/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 8080:8080
+    depends_on:
+      - pg

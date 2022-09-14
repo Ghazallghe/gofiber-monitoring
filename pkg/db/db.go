@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -31,4 +32,5 @@ func SetUpDB() {
 		time.Sleep(5 * time.Second)
 	}
 	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
+	DB.AutoMigrate(&models.User{})
 }

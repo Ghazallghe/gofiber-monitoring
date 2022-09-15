@@ -22,11 +22,13 @@ func CreateUser(c *fiber.Ctx) error {
 
 	input := new(inputData)
 	if err := c.BodyParser(input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		status := fiber.StatusBadRequest
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
 	}
 
 	if err := utils.ValidateStruct(input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err)
+		errType := fiber.ErrBadRequest
+		return c.Status(errType.Code).JSON(utils.ValidatorErrorHandling(errType.Code, errType.Message, err))
 	}
 
 	user := models.User{
@@ -37,17 +39,20 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	if err := user.HashPassword(); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		status := fiber.StatusInternalServerError
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
 	}
 
 	result := db.DB.Create(&user)
 
 	if result.Error != nil {
+		status := fiber.StatusBadRequest
 		var pgErr *pgconn.PgError
 		if errors.As(result.Error, &pgErr) && pgErr.Code == UniqueValidationError {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Email is already used"})
+			return c.Status(status).JSON(utils.LogicalErrorHandling(status, "Email is already used"))
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(result.Error)
+		status = fiber.StatusInternalServerError
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, result.Error.Error()))
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(user)

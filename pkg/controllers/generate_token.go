@@ -4,8 +4,8 @@ import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/models"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils"
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils/authService"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateToken(c *fiber.Ctx) error {
@@ -42,7 +42,7 @@ func GenerateToken(c *fiber.Ctx) error {
 		return c.Status(status).JSON(utils.LogicalErrorHandling(status, "Email or Password is incorrect"))
 	}
 
-	t, err := utils.JwtGenerator(*user)
+	t, err := authService.JwtGenerator(*user)
 	if err != nil {
 		status := fiber.StatusInternalServerError
 		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
@@ -52,16 +52,12 @@ func GenerateToken(c *fiber.Ctx) error {
 }
 
 func TestToken(c *fiber.Ctx) error {
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	id := claims["user_id"].(string)
+	user, err := authService.User(c)
 
-	dbUser := new(models.User)
-	result := db.DB.Find(dbUser, "id = ?", id)
-	if result.Error != nil {
+	if err != nil {
 		status := fiber.StatusUnauthorized
-		return c.Status(status).JSON(utils.LogicalErrorHandling(status, result.Error.Error()))
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dbUser)
+	return c.Status(fiber.StatusOK).JSON(user)
 }

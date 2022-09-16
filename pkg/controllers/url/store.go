@@ -4,8 +4,8 @@ import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/models"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils"
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils/authService"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 const UniqueValidationError = "23505"
@@ -27,21 +27,16 @@ func Store(c *fiber.Ctx) error {
 		return c.Status(errType.Code).JSON(utils.ValidatorErrorHandling(errType.Code, errType.Message, err))
 	}
 
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	id := claims["user_id"].(string)
-
-	dbUser := new(models.User)
-	userResult := db.DB.Find(dbUser, "id = ?", id)
-	if userResult.Error != nil {
+	user, err := authService.User(c)
+	if err != nil {
 		status := fiber.StatusUnauthorized
-		return c.Status(status).JSON(utils.LogicalErrorHandling(status, userResult.Error.Error()))
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
 	}
 
 	url := models.Url{
 		Url:       input.Url,
 		Thershold: input.Thershold,
-		UserId:    dbUser.ID,
+		UserId:    user.ID,
 	}
 
 	result := db.DB.Create(&url)

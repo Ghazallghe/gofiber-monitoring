@@ -4,8 +4,8 @@ import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/models"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils"
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils/authService"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateToken(c *fiber.Ctx) error {
@@ -42,7 +42,7 @@ func GenerateToken(c *fiber.Ctx) error {
 		return c.Status(status).JSON(utils.LogicalErrorHandling(status, "Email or Password is incorrect"))
 	}
 
-	t, err := utils.JwtGenerator(*user)
+	t, err := authService.JwtGenerator(*user)
 	if err != nil {
 		status := fiber.StatusInternalServerError
 		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))

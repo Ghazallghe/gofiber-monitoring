@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app: 
+    build: 
+      dockerfile: Dockerfile
+    container_name: monitor-app
+    ports:
+      - 3000:${SERVER_PORT}
+
+
+  pg:
+    image: postgres:14.5-alpine
+    restart: always
+    container_name: pg-db-production
+    volumes:
+      - ./pgdata/production:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+    - 8080:8080
+    depends_on:
+      - pg

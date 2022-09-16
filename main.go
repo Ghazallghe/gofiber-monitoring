@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
+
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/configs"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/routes"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,10 +17,14 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	app.Listen(":3000")
+	routes.SetUpRoutes(app)
+
+	port := os.Getenv("SERVER_PORT")
+	connection := ":" + port
+	app.Listen(connection)
 }
 
 func initialization() {
-	configs.SetUpEnv()
+	configs.SetUpConfigs()
 	db.SetUpDB()
 }

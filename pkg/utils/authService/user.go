@@ -8,16 +8,18 @@ import (
 )
 
 func User(c *fiber.Ctx) (*models.User, error) {
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	id := claims["user_id"].(string)
-
-	dbUser := new(models.User)
-	result := db.DB.Find(dbUser, "id = ?", id)
+	user := new(models.User)
+	result := db.DB.Find(user, "id = ?", Id(c))
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	return dbUser, nil
+	return user, nil
+}
 
+func Id(c *fiber.Ctx) string {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+
+	return claims["user_id"].(string)
 }

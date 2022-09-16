@@ -4,14 +4,12 @@ import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/models"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils"
+	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils/authService"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func Index(c *fiber.Ctx) error {
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	id := claims["user_id"].(string)
+	id := authService.Id(c)
 
 	dbUser := new(models.User)
 	result := db.DB.Preload("Urls").Find(dbUser, "id = ?", id)

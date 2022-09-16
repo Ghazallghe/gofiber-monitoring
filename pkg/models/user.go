@@ -10,6 +10,7 @@ type User struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Password  string `json:"-"`
+	Urls      []Url  `json:"-"`
 }
 
 func (user *User) HashPassword() error {

@@ -11,7 +11,7 @@ import (
 
 func JwtGenerator(user models.User) (string, error) {
 	jwtKey := []byte(os.Getenv("JWT_SECRET_KEY"))
-	expTimeStr := os.Getenv("JWT_SECRET_KEY_EXPIRE_HOUR")
+	expTimeStr := os.Getenv("JWT_KEY_EXPIRE_HOUR")
 	expTime, _ := strconv.Atoi(expTimeStr)
 	exp := time.Hour * time.Duration(expTime)
 

@@ -16,6 +16,14 @@ func Store(c *fiber.Ctx) error {
 		Thershold int32  `json:"thershold" validate:"required,min=1,max=512"`
 	}
 
+	var count int64
+	db.DB.Model(&models.Url{}).Where("user_id = ?", authService.Id(c)).Count(&count)
+
+	if count >= 20 {
+		status := fiber.StatusBadRequest
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, "You reached the maxsimum urls."))
+	}
+
 	input := new(inputData)
 	if err := c.BodyParser(input); err != nil {
 		status := fiber.StatusBadRequest

@@ -13,7 +13,7 @@ const UniqueValidationError = "23505"
 func Store(c *fiber.Ctx) error {
 	type inputData struct {
 		Url       string `json:"url" validate:"required"`
-		Thershold int32  `json:"thershold" validate:"required,min=1,max=512"`
+		Threshold int32  `json:"threshold" validate:"required,min=1,max=512"`
 	}
 
 	var count int64
@@ -21,7 +21,7 @@ func Store(c *fiber.Ctx) error {
 
 	if count >= 20 {
 		status := fiber.StatusBadRequest
-		return c.Status(status).JSON(utils.LogicalErrorHandling(status, "You reached the maxsimum urls."))
+		return c.Status(status).JSON(utils.LogicalErrorHandling(status, "You reached the maximum urls."))
 	}
 
 	input := new(inputData)
@@ -43,7 +43,7 @@ func Store(c *fiber.Ctx) error {
 
 	url := models.Url{
 		Url:       input.Url,
-		Thershold: input.Thershold,
+		Threshold: input.Threshold,
 		UserId:    user.ID,
 	}
 

@@ -32,5 +32,5 @@ func SetUpDB() {
 		time.Sleep(5 * time.Second)
 	}
 	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
-	DB.AutoMigrate(&models.User{}, &models.Url{})
+	DB.AutoMigrate(&models.User{}, &models.Url{}, &models.Statistics{})
 }

@@ -26,5 +26,6 @@ func SetUpRoutes(app *fiber.App) {
 
 		url.Get("", urlHandler.Index)
 		url.Post("", urlHandler.Store)
+		url.Get("/:id", urlHandler.Statistics)
 	}
 }

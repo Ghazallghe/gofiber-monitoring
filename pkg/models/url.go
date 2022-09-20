@@ -4,7 +4,8 @@ import "github.com/google/uuid"
 
 type Url struct {
 	BaseModel
-	Url       string `json:"url"`
-	Threshold int32  `json:"threshold"`
-	UserId    uuid.UUID
+	Url        string `json:"url"`
+	Threshold  int32  `json:"threshold"`
+	UserId     uuid.UUID
+	Statistics []Statistics
 }

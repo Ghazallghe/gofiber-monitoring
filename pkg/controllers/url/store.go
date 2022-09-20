@@ -6,6 +6,7 @@ import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils"
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/utils/authService"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 const UniqueValidationError = "23505"
@@ -35,7 +36,7 @@ func Store(c *fiber.Ctx) error {
 		return c.Status(errType.Code).JSON(utils.ValidatorErrorHandling(errType.Code, errType.Message, err))
 	}
 
-	user, err := authService.User(c)
+	userId, err := uuid.Parse(authService.Id(c))
 	if err != nil {
 		status := fiber.StatusUnauthorized
 		return c.Status(status).JSON(utils.LogicalErrorHandling(status, err.Error()))
@@ -44,7 +45,7 @@ func Store(c *fiber.Ctx) error {
 	url := models.Url{
 		Url:       input.Url,
 		Threshold: input.Threshold,
-		UserId:    user.ID,
+		UserId:    userId,
 	}
 
 	result := db.DB.Create(&url)

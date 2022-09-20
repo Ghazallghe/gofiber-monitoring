@@ -51,6 +51,7 @@ func testUrl(url models.Url) {
 		existingStats.ClientError += status.ClientError
 		existingStats.ServerError += status.ServerError
 		db.DB.Save(&existingStats)
+		triggerAlert(&url, existingStats)
 	}
 }
 
@@ -61,5 +62,16 @@ func findStatus(status *models.Statistics, respStatus string) {
 	case strings.HasPrefix(respStatus, "4"):
 		status.ClientError++
 	case strings.HasPrefix(respStatus, "5"):
+	}
+}
+
+func triggerAlert(url *models.Url, stat *models.Statistics) {
+	if url.Threshold < stat.ClientError+stat.ServerError {
+		alert := models.Alert{
+			UrlId:       url.ID,
+			ErrorCounts: stat.ClientError + stat.ServerError,
+		}
+
+		db.DB.Save(&alert)
 	}
 }

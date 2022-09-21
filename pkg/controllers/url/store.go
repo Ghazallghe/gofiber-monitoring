@@ -14,7 +14,7 @@ const UniqueValidationError = "23505"
 func Store(c *fiber.Ctx) error {
 	type inputData struct {
 		Url       string `json:"url" validate:"required"`
-		Threshold int32  `json:"threshold" validate:"required,min=1,max=512"`
+		Threshold uint   `json:"threshold" validate:"required,min=1,max=512"`
 	}
 
 	var count int64

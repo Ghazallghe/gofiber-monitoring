@@ -7,5 +7,5 @@ type Url struct {
 	Url        string `json:"url"`
 	Threshold  uint   `json:"threshold"`
 	UserId     uuid.UUID
-	Statistics []Statistics
+	Statistics []Statistics `json:"-"`
 }

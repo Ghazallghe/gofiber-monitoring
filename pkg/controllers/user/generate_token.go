@@ -1,4 +1,4 @@
-package controllers
+package user
 
 import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/db"

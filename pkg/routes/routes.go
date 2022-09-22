@@ -2,8 +2,8 @@ package routes
 
 import (
 	"github.com/Ghazallghe/gofiber-monitoring/pkg/configs"
-	"github.com/Ghazallghe/gofiber-monitoring/pkg/controllers"
 	urlHandler "github.com/Ghazallghe/gofiber-monitoring/pkg/controllers/url"
+	userHandler "github.com/Ghazallghe/gofiber-monitoring/pkg/controllers/user"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -12,11 +12,11 @@ func SetUpRoutes(app *fiber.App) {
 	// user
 	{
 		user := r.Group("/users")
-		user.Post("", controllers.CreateUser)
-		user.Post("/token", controllers.GenerateToken)
+		user.Post("", userHandler.CreateUser)
+		user.Post("/token", userHandler.GenerateToken)
 		// test token
 		user.Use(configs.JwtConfig)
-		user.Get("/me", controllers.TestToken)
+		user.Get("/me", userHandler.TestToken)
 	}
 
 	// url
@@ -26,7 +26,7 @@ func SetUpRoutes(app *fiber.App) {
 
 		url.Get("", urlHandler.Index)
 		url.Post("", urlHandler.Store)
-		url.Get("/:id", urlHandler.Statistics)
+		url.Get("/:id/statistics", urlHandler.Statistics)
 		url.Get("/:id/alerts", urlHandler.Alerts)
 	}
 }

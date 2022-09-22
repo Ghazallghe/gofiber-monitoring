@@ -32,7 +32,7 @@ func errorMessages(err validator.FieldError) map[string]string {
 	case "email":
 		errMsg["message"] = errField + " should be in an email format"
 	case "min", "max":
-		errMsg["message"] = errField + " " + errTag + " length should be " + err.Param()
+		errMsg["message"] = errField + " " + errTag + " should be " + err.Param()
 	}
 	return errMsg
 }

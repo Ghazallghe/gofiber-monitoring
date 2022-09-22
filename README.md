@@ -2,7 +2,7 @@
 
 This project is the final project of Snapp Summer course, with mentoring of [Parham Alavani](https://github.com/1995parham). 
 
-And is developed by [Ghazal](https://github.com/ghazallghe)👩🏼‍💻 and [Mohammad](https://github.com/MohammadShabaniSBU)👨🏻‍💻 with LOVE and **HATE**.
+And is developed by [Ghazal](https://github.com/ghazallghe) and [Mohammad](https://github.com/MohammadShabaniSBU) with LOVE and **HATE**.
 
 ## Introduction
 
